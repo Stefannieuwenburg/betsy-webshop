@@ -32,7 +32,7 @@ FULL OUTER JOIN with exclusion
 
 ##### Database modelling; ####
 
-from google.appengine.ext import db
+
 
 class Person(db.Expando):
     first_name = db.StringProperty()
