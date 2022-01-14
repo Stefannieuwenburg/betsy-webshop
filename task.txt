@@ -1,0 +1,53 @@
+You need to master the following to complete this assignment:
+
+#### bWriting functions and function arguments #####
+
+def greet(name, msg="Good morning!"):
+    """
+    This function greets to
+    the person with the
+    provided message.
+    If the message is not provided,
+    it defaults to "Good
+    morning!"
+    """
+    print("Hello", name + ', ' + msg)
+
+
+greet("Kate")
+greet("Bruce", "How do you do?")
+
+####### SQL joins; ########
+
+
+INNER JOIN
+LEFT OUTER JOIN
+RIGHT OUTER JOIN
+FULL OUTER JOIN
+LEFT OUTER JOIN with exclusion
+RIGHT OUTER JOIN with exclusion
+FULL OUTER JOIN with exclusion
+
+
+
+##### Database modelling; ####
+
+from google.appengine.ext import db
+
+class Person(db.Expando):
+    first_name = db.StringProperty()
+    last_name = db.StringProperty()
+    hobbies = db.StringListProperty()
+
+p = Person(phone_number='1-206-555-9234',
+           address='123 First Ave., Seattle, WA, 98101',
+           first_name='Alfred',
+           last_name='Smith',
+           mobile_number='1-206-555-0117')
+
+p.hobbies = ["chess", "travel"]
+
+p.chess_elo_rating = 1350
+
+p.travel_countries_visited = ["Spain", "Italy", "USA", "Brazil"]
+p.travel_trip_count = 13
