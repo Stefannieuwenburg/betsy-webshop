@@ -1,0 +1,7 @@
+### To master ###
+
+You need to master the following to complete this assignment:
+
+Writing functions and function arguments;
+SQL joins;
+Database modelling;
