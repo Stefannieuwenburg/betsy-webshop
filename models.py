@@ -1,90 +1,67 @@
+import os
+os.remove("betsy.db")
+
+
 from peewee import *
-import sqlite3
-connection = sqlite3.connect('betsy.db')
-
-db = SqliteDatabase('betsy.db')
+from main import *
 
 
-class User(Model):
-    name = CharField()
 
+db = SqliteDatabase('betsy.db', pragmas=(
+    ('foreign_keys', 1), ('journal_mode', 'wall')))
+
+class BaseModel(Model):
     class Meta:
         database = db
 
+class User(BaseModel):
+    name = CharField()
 
-class User_Address(Model):
+class User_Address(BaseModel):
     user = ForeignKeyField(User, backref='address')
     street = CharField()
     postal_code = CharField()
     city = CharField()
 
-    class Meta:
-        database = db
-
-
-class User_Billing(Model):
+class User_Billing(BaseModel):
     user = ForeignKeyField(User, backref='billing')
     card_type = CharField()
     card_number = IntegerField()
 
-    class Meta:
-        database = db
-
-
-class Product(Model):
+class Product(BaseModel):
     owner = ForeignKeyField(User, backref='products')
     name = CharField()
     description = CharField()
     price = FloatField()
     quantity = IntegerField()
 
-    class Meta:
-        database = db
-
-
-class Tag(Model):
+    
+class Tag(BaseModel):
     name = CharField()
 
-    class Meta:
-        database = db
-
-
-class ProductTag(Model):
+    
+class ProductTag(BaseModel):
     product = ForeignKeyField(Product)
     tag = ForeignKeyField(Tag)
 
-    class Meta:
-        database = db
 
-
-class Transaction(Model):
+class Transaction(BaseModel):
     buyer = ForeignKeyField(User, backref='transactions')
     bought_product = ForeignKeyField(Product, backref='transactions')
     quantity = IntegerField()
     total_price = FloatField()
     bought_at = DateTimeField()
 
-    class Meta:
-        database = db
 
+db.connect()
+print('Connected to database.')
 
-def init():
-    connection = db.connect()
+# create a person in the database
+ 
 
-    if connection:
-        print('Connected to database.')
-
-    with db:
-        db.create_tables([User,User_Address,User_Billing,Product,Tag,ProductTag,Transaction])
-
-        print('Created tables.')
-
-
-def test_data():
-    # User1 - lizzy
-    lizzy = User.create(
-        name='lizzy'
-    )
+def data_User():
+# 1e User = lizzy
+    lizzy = User.create(name="lizzy")
 
     lizzy_address = User_Address.create(
         user=lizzy, 
@@ -123,10 +100,8 @@ def test_data():
         quantity=3
     )
 
-    # User2 - kees
-    kees = User.create(
-        name='kees'
-    )
+    # 2e User = kees
+    kees = User.create(name="kees")
 
     kees_address = User_Address.create(
         user=kees,
@@ -171,22 +146,23 @@ def test_data():
 
     food = Tag.create(name='food')
 
-   
 
-   
     # lizzy
-    
-    ProductTag.create(product=sweater,tag=clothing)
+    ProductTag.create(product = sweater,tag=clothing)
 
-    ProductTag.create(product=socks,tag=clothing)
+    ProductTag.create(product = socks,tag=clothing)
 
-    ProductTag.create(product=hat,tag=clothing)    
+    ProductTag.create(product = hat,tag=clothing)    
 
     # kees
-    ProductTag.create(product=sausages,tag=food)
+    ProductTag.create(product = sausages,tag=food)
 
-    ProductTag.create( product=steak,tag=food)
+    ProductTag.create( product = steak,tag=food)
 
-    ProductTag.create(product=chicken_drums,tag=food)
+    ProductTag.create(product = chicken_drums,tag=food)
     
-    print('Database filled with data.')
+db.create_tables([User,User_Address,User_Billing,Product,Tag,ProductTag,Transaction],safe = True)
+print('Created tables.')
+    
+
+

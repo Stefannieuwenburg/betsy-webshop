@@ -2,9 +2,9 @@ __winc_id__ = "d7b474e9b3a54d23bca54879a4f1855b"
 __human_name__ = "Betsy Webshop"
 
 
-from peewee import *
-from datetime import datetime
 import models 
+from datetime import datetime
+
 
 def search(term=str):
     term = term.lower()
@@ -96,52 +96,55 @@ def remove_product(product_id):
     product.delete_instance()
 
 
-
 def main():
-    # Init database
-    # models.init()
-    # print('')
-
-    # # Fill with Test Data
-    # models.test_data()
-    # print('')
-
+    
+   
     # Search
-    # search('sweater')
-    # print('')
+    search('sweater')
+    
 
-    # List User Products
+    #>List User Products
+    
+    # list_user_products(1)
     # list_user_products(2)
-    # print('')
+    
 
-    # # List all products tagged with '??'
+    #> List all products tagged with '??'
+    
     # list_products_per_tag(1)
-    # print('')
+    
 
     # # starts selling 
+    
     # product = models.Product(name='Olive Oil', description='Fresh olive oil from the farm', price=6.50, quantity=10)
     # add_product_to_catalog(2, product)
-    # print('')
-
-    # # List John's Products again
-     list_user_products(2)
-     print('')
-
-    # # Now there's only 5 thinks left in the webshop
-    # update_stock(5, 5)
-    # print('')
-
-    # # Let's make a transaction
-    # purchase_product(1, 2, 2)
-    # print('')
-
-    # # And remove a product
-    # remove_product(6)
-    # print('')
-
     
+
+    #> List User Products again
+    
+    #list_user_products(1)
+   
+
+    #> Now there's only 5 thinks left in the webshop
+    
+    # update_stock(5, 5)
+    
+
+    #> Let's make a transaction
+    
+    # purchase_product(1, 2, 2)
+   
+
+    #> And remove a product
+    
+    # remove_product(6)
+  
 
 
 if __name__ == '__main__':
     main()
+   
+    
+    
+    
   
