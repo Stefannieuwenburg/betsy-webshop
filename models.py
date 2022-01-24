@@ -1,7 +1,4 @@
 import os
-os.remove("betsy.db")
-
-
 from peewee import *
 from main import *
 

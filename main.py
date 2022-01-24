@@ -6,7 +6,7 @@ import models
 from datetime import datetime
 
 
-def search(term=str):
+def search(term):
     term = term.lower()
     query = models.Product.select().where(models.Product.name.contains(term) | models.Product.description.contains(term))
 
@@ -18,7 +18,7 @@ def search(term=str):
         print('No products matched your search term.')
 
 
-def list_user_products(user_id=int):
+def list_user_products(user_id):
     query = models.Product.select().where(models.Product.owner == user_id)
 
     if query:
@@ -32,7 +32,7 @@ def list_user_products(user_id=int):
         print('Either the user has no products or no valid id was given.')
 
 
-def list_products_per_tag(tag_id=int):
+def list_products_per_tag(tag_id):
     query = models.Product.select().join(models.ProductTag).join(models.Tag).where(models.Tag.id == tag_id)
 
     if query:
@@ -46,22 +46,22 @@ def list_products_per_tag(tag_id=int):
         print('Either the tag has no associated products or no valid id was given.')
 
 
-def add_product_to_catalog(user_id=int, product=models.Product):
+def add_product_to_catalog(user_id, product=models.Product):
     user = models.User.get_by_id(user_id)
     product.owner = user
     product.save()
-    print(product.name + ' with the id of ' + str(product.id) + ' owned by ' + user.name + ' was stored in the database.')
+    print(product.name + ' with the id of ' + (product.id) + ' owned by ' + user.name + ' was stored in the database.')
 
 
-def update_stock(product_id=int, new_quantity=int):
+def update_stock(product_id, new_quantity):
     product = models.Product.get_by_id(product_id)
     old_stock = product.quantity
     product.quantity = new_quantity
     product.save()
-    print(product.name + ' used to have ' + str(old_stock) + ' in stock. New stock is: ' + str(product.quantity) + '.')
+    print(product.name + ' used to have ' + (old_stock) + ' in stock. New stock is: ' + (product.quantity) + '.')
 
 
-def purchase_product(product_id=int, buyer_id=int, quantity=int):
+def purchase_product(product_id, buyer_id, quantity):
     product = models.Product.get_by_id(product_id)
     buyer = models.User.get_by_id(buyer_id)
 
@@ -83,7 +83,7 @@ def purchase_product(product_id=int, buyer_id=int, quantity=int):
         bought_at = datetime.now()
     )
 
-    print('At ' + str(transaction.bought_at) + ', ' + buyer.name + ' bought ' + str(transaction.quantity) + ' of ' + product.name + ' at a total price of: €' + str(transaction.total_price) + '.')
+    print('At ' + (transaction.bought_at) + ', ' + buyer.name + ' bought ' + (transaction.quantity) + ' of ' + product.name + ' at a total price of: €' + (transaction.total_price) + '.')
 
     new_quantity = product.quantity - quantity
 
