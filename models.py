@@ -1,4 +1,3 @@
-import os
 from peewee import *
 from main import *
 
