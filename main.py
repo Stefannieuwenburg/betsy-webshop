@@ -11,7 +11,6 @@ def search(term):
     query = models.Product.select().where(models.Product.name.contains(term) | models.Product.description.contains(term))
 
     if query:
-        print('Search results:')
         for product in query:
             print(product.name)
     else:
@@ -23,9 +22,7 @@ def list_user_products(user_id):
 
     if query:
         user = models.User.get_by_id(user_id)
-
         print(user.name + "'s products:")
-
         for product in query:
             print(product.name)
     else:
