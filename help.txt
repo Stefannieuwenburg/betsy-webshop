@@ -1,0 +1,33 @@
+beste  Winc docenten-team,
+
+beste Rishaan van Beveren dit is mijn txt die er bij staat:
+Hoi ik zit vast met deze opdracht kunnen jullie kijken 
+https://github.com/Stefannieuwenburg/betsy-webshop.git
+er is niks mee gedaan ??
+https://vimeo.com/669431552/1103ff4bba
+
+ik doe me best om een # create a person in the database
+ 
+def data_user():
+# 1e User = lizzy
+
+en nu snap ik uit de video dat het niet hoeft ??
+maar het is een onderdeel uit de opdracht??
+
+Querying
+In order to manage the database, the webshop must have a number of querying utlities. The scaffolding for the utilities can be found in main.py Extend the methods with the relevant functionality.
+
+In this first iteration of the database we want to be able to:
+
+Search for products based on a term. Searching for 'sweater' should yield all products that have the word 'sweater' in the name. This search should be case-insensitive
+View the products of a given user.
+View all products for a given tag.
+Add a product to a user.
+Remove a product from a user.
+Update the stock quantity of a product.
+Handle a purchase between a buyer and a seller for a given product
+
+zou je daar iets meer over kunnen vertellen ??
+ik zit dag en nacht op de chat altijd mogelijk om een pd te plaaten in het slack kanaal.
+geen fouten meer gevonden als ik python main.py run zo als aan gegeven was in de video
+
