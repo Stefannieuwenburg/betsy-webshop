@@ -11,40 +11,40 @@ class BaseModel(Model):
     class Meta:
         database = db
 
-class User(BaseModel):
+class user(BaseModel):
     name = CharField()
 
-class User_Address(BaseModel):
-    user = ForeignKeyField(User, backref='address')
+class user_address(BaseModel):
+    user = ForeignKeyField(user, backref='address')
     street = CharField()
     postal_code = CharField()
     city = CharField()
 
-class User_Billing(BaseModel):
-    user = ForeignKeyField(User, backref='billing')
+class user_billing(BaseModel):
+    user = ForeignKeyField(user, backref='billing')
     card_type = CharField()
     card_number = IntegerField()
 
-class Product(BaseModel):
-    owner = ForeignKeyField(User, backref='products')
+class product(BaseModel):
+    owner = ForeignKeyField(user, backref='products')
     name = CharField()
     description = CharField()
     price = FloatField()
     quantity = IntegerField()
 
     
-class Tag(BaseModel):
+class tag(BaseModel):
     name = CharField()
 
     
-class ProductTag(BaseModel):
-    product = ForeignKeyField(Product)
-    tag = ForeignKeyField(Tag)
+class product_tag(BaseModel):
+    product = ForeignKeyField(product)
+    tag = ForeignKeyField(tag)
 
 
-class Transaction(BaseModel):
-    buyer = ForeignKeyField(User, backref='transactions')
-    bought_product = ForeignKeyField(Product, backref='transactions')
+class transaction(BaseModel):
+    buyer = ForeignKeyField(user, backref='transactions')
+    bought_product = ForeignKeyField(product, backref='transactions')
     quantity = IntegerField()
     total_price = FloatField()
     bought_at = DateTimeField()
@@ -58,22 +58,22 @@ print('Connected to database.')
 
 def data_User():
 # 1e User = lizzy
-    lizzy = User.create(name="lizzy")
+    lizzy = user.create(name="lizzy")
 
-    lizzy_address = User_Address.create(
+    lizzy_address = user_address.create(
         user=lizzy, 
         street='Hoofdweg 34', 
         postal_code='1104 MM', 
         city='Amsterdam'
     )
 
-    lizzy_billing = User_Billing.create(
+    lizzy_billing = user_billing.create(
         user=lizzy, 
         card_type='Rabobank', 
         card_number=12345678
     )
 
-    sweater = Product.create(
+    sweater = product.create(
         owner=lizzy, 
         name='sweater', 
         description='Warm home sweater handmade by grandma Betsy',
@@ -81,7 +81,7 @@ def data_User():
         quantity=3
     )
 
-    socks = Product.create(
+    socks = product.create(
         owner=lizzy,
         name='socks',
         description='Warm home socks handmade by grandma Betsy',
@@ -89,7 +89,7 @@ def data_User():
         quantity=5
     )
 
-    hat = Product.create(
+    hat = product.create(
         owner=lizzy,
         name='hat',
         description='Warm home hat handmade by grandma',
@@ -98,22 +98,22 @@ def data_User():
     )
 
     # 2e User = kees
-    kees = User.create(name="kees")
+    kees = user.create(name="kees")
 
-    kees_address = User_Address.create(
+    kees_address = user_address.create(
         user=kees,
         street='Bijstraat 70',
         postal_code='1188 AB',
         city='Leiden'
     )
 
-    kees_billing = User_Billing.create(
+    kees_billing = user_billing.create(
         user=kees,
         card_type='ABN Amro',
         card_number=87654321
     )
 
-    sausages = Product.create(
+    sausages = product.create(
         owner=kees,
         name='Sausages',
         description='Fresh sausages from the farm',
@@ -121,7 +121,7 @@ def data_User():
         quantity=25
     )
 
-    steak = Product.create(
+    steak = product.create(
         owner=kees,
         name='Steak',
         description='Fresh steak from the farm',
@@ -129,7 +129,7 @@ def data_User():
         quantity=10
     )
 
-    chicken_drums = Product.create(
+    chicken_drums = product.create(
         owner=kees,
         name='Chicken Drums',
         description='Fresh chicken drums from the farm',
@@ -139,26 +139,26 @@ def data_User():
 
     #Tags
     
-    clothing= Tag.create(name='clothing')
+    clothing= tag.create(name='clothing')
 
-    food = Tag.create(name='food')
+    food = tag.create(name='food')
 
 
     # lizzy
-    ProductTag.create(product = sweater,tag=clothing)
+    product_tag.create(product = sweater,tag=clothing)
 
-    ProductTag.create(product = socks,tag=clothing)
+    product_tag.create(product = socks,tag=clothing)
 
-    ProductTag.create(product = hat,tag=clothing)    
+    product_tag.create(product = hat,tag=clothing)    
 
     # kees
-    ProductTag.create(product = sausages,tag=food)
+    product_tag.create(product = sausages,tag=food)
 
-    ProductTag.create( product = steak,tag=food)
+    product_tag.create( product = steak,tag=food)
 
-    ProductTag.create(product = chicken_drums,tag=food)
+    product_tag.create(product = chicken_drums,tag=food)
     
-db.create_tables([User,User_Address,User_Billing,Product,Tag,ProductTag,Transaction],safe = True)
+db.create_tables([user,user_address,user_billing,product,tag,product_tag,transaction],safe = True)
 print('Created tables.')
     
 

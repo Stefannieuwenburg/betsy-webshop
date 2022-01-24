@@ -42,8 +42,8 @@ def list_products_per_tag(tag_id):
     else:
         print('Either the tag has no associated products or no valid id was given.')
 
-
-def add_product_to_catalog(user_id, product=models.Product):
+# nog na kijken 
+def add_product_to_catalog(user_id, product):
     user = models.User.get_by_id(user_id)
     product.owner = user
     product.save()
@@ -79,7 +79,7 @@ def purchase_product(product_id, buyer_id, quantity):
         total_price = total_price,
         bought_at = datetime.now()
     )
-
+    # vervangen naar print(f'{}')
     print('At ' + (transaction.bought_at) + ', ' + buyer.name + ' bought ' + (transaction.quantity) + ' of ' + product.name + ' at a total price of: €' + (transaction.total_price) + '.')
 
     new_quantity = product.quantity - quantity
