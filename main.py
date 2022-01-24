@@ -8,7 +8,7 @@ from datetime import datetime
 
 def search(term):
     term = term.lower()
-    query = models.Product.select().where(models.Product.name.contains(term) | models.Product.description.contains(term))
+    query = models.product.select().where(models.product.name.contains(term) | models.product.description.contains(term))
 
     if query:
         for product in query:
@@ -18,7 +18,7 @@ def search(term):
 
 
 def list_user_products(user_id):
-    query = models.Product.select().where(models.Product.owner == user_id)
+    query = models.product.select().where(models.product.owner == user_id)
 
     if query:
         user = models.User.get_by_id(user_id)
@@ -30,10 +30,10 @@ def list_user_products(user_id):
 
 
 def list_products_per_tag(tag_id):
-    query = models.Product.select().join(models.ProductTag).join(models.Tag).where(models.Tag.id == tag_id)
+    query = models.product.select().join(models.product_tag).join(models.Tag).where(models.tag.id == tag_id)
 
     if query:
-        tag = models.Tag.get_by_id(tag_id)
+        tag = models.tag.get_by_id(tag_id)
 
         print('All products associated with ' + tag.name + ':')
 
@@ -44,14 +44,14 @@ def list_products_per_tag(tag_id):
 
 # nog na kijken 
 def add_product_to_catalog(user_id, product):
-    user = models.User.get_by_id(user_id)
+    user = models.user.get_by_id(user_id)
     product.owner = user
     product.save()
     print(product.name + ' with the id of ' + (product.id) + ' owned by ' + user.name + ' was stored in the database.')
 
 
 def update_stock(product_id, new_quantity):
-    product = models.Product.get_by_id(product_id)
+    product = models.product.get_by_id(product_id)
     old_stock = product.quantity
     product.quantity = new_quantity
     product.save()
