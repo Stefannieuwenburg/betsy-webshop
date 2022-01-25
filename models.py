@@ -66,12 +66,16 @@ class Transaction(Model):
         database = db
 
 
-def init():
-    connection = db.connect()
 
-    if connection:
-        print('Connected to database.')
+db.connect()
+print('Connected to database.')
 
-    with db:
-        db.create_tables([User,User_Address,User_Billing,Product,Tag,Product_Tag,Transaction])
-        print('Created tables.')
+   
+db.create_tables([User,User_Address,User_Billing,Product,Tag,Product_Tag,Transaction])
+print('Created tables.')
+
+
+        
+if __name__ == '__main__':
+    pass
+   

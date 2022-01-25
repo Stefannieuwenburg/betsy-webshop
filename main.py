@@ -81,7 +81,7 @@ def purchase_product(product_id, buyer_id, quantity):
         bought_at = datetime.now()
     )
     
-    print(f'At (transaction.bought_at)  { buyer.name}  bought (transaction.quantity) { product.name} at a total price of: € (transaction.total_price) ')
+    print(f'At {(transaction.bought_at)}  { buyer.name}  bought {(transaction.quantity)}  { product.name} at a total price of: € {(transaction.total_price)} ')
 
     new_quantity = product.quantity - quantity
 
