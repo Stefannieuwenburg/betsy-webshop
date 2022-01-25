@@ -1,103 +1,136 @@
 __winc_id__ = "d7b474e9b3a54d23bca54879a4f1855b"
 __human_name__ = "Betsy Webshop"
 
+from models import Product, ProductTag, Tag, Transaction, User
 
-import models 
-from datetime import datetime
 
-# lees ook de help text a.u.b ik zit een beetje vast.
 
+# Search for products based on a term. Searching for 'sweater' should yield all products that have the word
+# 'sweater' in the name. This search should be case-insensitive.
 def search(term):
-    term = term.lower()
-    query = models.product.select().where(models.Product.name.contains(term) | models.Product.description.contains(term))
-    if query:
-        for product in query:
-            print(product.name)
-    else:
-        print('No products matched your search term.')
+    print("* search:", term)
+    query = Product.select().where(Product.name.contains(term) | Product.description.contains(term))
+    result = list(query.execute())
+    print("result:", result)
 
-
+# View the products of a given user.
 def list_user_products(user_id):
-    query = models.Product.select().where(models.Product.owner == user_id)
+    
+    print("* list_user_products:", user_id)
+    query = Product.select().where(Product.seller == user_id)
+    result = list(query.execute())
+    print("result:", result)
 
-    if query:
-        user = models.User.get_by_id(user_id)
-        print(f"{user.name}  products:")
-        for product in query:
-            print(product.name)
-    else:
-        print('Either the user has no products or no valid id was given.')
-
-
+# View all products for a given tag.
 def list_products_per_tag(tag_id):
-    query = models.Product.select().join(models.Product_Tag).join(models.Tag).where(models.Tag.id == tag_id)
-
-    if query:
-        tag = models.Tag.get_by_id(tag_id)
-        print(f'All products associated with {tag.name}:')
-        for product in query:
-            print(product.name)
-    else:
-        print('Either the tag has no associated products or no valid id was given.')
+    print("* list_products_per_tag:", tag_id)
+    query = Product.select().join(ProductTag, on=(Product.id == ProductTag.product))\
+        .join(Tag, on=Tag.id == ProductTag.tag).where(Tag.id == tag_id)
+    result = list(query.execute())
+    print("result:", result)
 
 
-def add_product_to_catalog(user_id, product):
-    product_to_get = product.select().where(product.name == product)
-    new_owner = models.User.select().where(models.User == user_id)
+# Add a product to a user.
+def add_product_to_catalog(user_id, name, description, price_in_cents, quantity):
+    print("* add_product_to_catalog:", user_id, name, description, price_in_cents, quantity)
+    result = Product.create(seller=user_id, name=name, description=description, price_in_cents=price_in_cents,
+                            quantity=quantity)
+    print("result:", result)
 
-    if product_to_get and new_owner:
-        added_product = models.Product.create(owner=user_id, product=product, quantity=1, tags=product.tags
-        )
-        print('New product added.')
-        return added_product
-    else:
-        print('Person or product not found.')
-
-
+# Update the stock quantity of a product.
 def update_stock(product_id, new_quantity):
-    product = models.Product.get_by_id(product_id)
-    old_stock = product.quantity
-    product.quantity = new_quantity
-    product.save()
-    print(f'{product.name}  used to have  {old_stock}  in stock. New stock is:  {product.quantity} ')
+    print("* update_stock:", product_id, new_quantity)
+    query = Product.update({Product.quantity: new_quantity}).where(Product.id == product_id)
+    result = query.execute()
+    print("result:", result)
 
-
+# Handle a purchase between a buyer and a seller for a given product
 def purchase_product(product_id, buyer_id, quantity):
-    product = models.Product.get_by_id(product_id)
-    buyer = models.User.get_by_id(buyer_id)
-    if buyer.id == product.owner:
-        print(f'You cannot buy products from yourself { buyer.name}')
-        return
-    if quantity >= product.quantity:
-        print(f'Not enough of  { product.name} in stock.')
-        return
-
-    total_price = round(product.price * quantity, 2)
-    transaction = models.Transaction.create(
-        buyer = buyer.id,
-        bought_product = product.id,
-        quantity = quantity,
-        total_price = total_price,
-        bought_at = datetime.now()
-    )
-    
-    print(f'At {(transaction.bought_at)}  { buyer.name}  bought {(transaction.quantity)}  { product.name} at a total price of: € {(transaction.total_price)} ')
-
+    print("* purchase_product:", product_id, buyer_id, quantity)
+    query_product = Product.select().where(Product.id == product_id)
+    product = query_product.execute()[0]
+    if quantity > product.quantity:
+        print("Error: Not enough items in stock.")
+        return False
     new_quantity = product.quantity - quantity
+    current_price = product.price_in_cents
+    total_price = current_price * quantity
+    Product.update(quantity=new_quantity).where(Product.id == product_id).execute()
+    Transaction.create(buyer=buyer_id, product_id=product_id, number_sold=quantity, selling_price_cents=current_price,
+                       total_price_cents=total_price)
 
-    update_stock(product.id, new_quantity)
-
-
+ # Remove a product from a user.
 def remove_product(product_id):
-    product = models.Product.get_by_id(product_id)
-    print(f'Deleting { product.name} from the database.')
-    product.delete_instance()
+    print("* remove_product:", product_id)
+    query = Product.delete().where(Product.id == product_id)
+    result = query.execute()
+    print("result:", result)
 
 
-if __name__ == '__main__':
+def show_users():
+    print("* Show users")
+    query = User.select()
+    result = query.execute()
+    for user in result:
+        print(f"{user.id}; {user.name}; {user.address}; {user.billing_information}")
+
+
+def show_users_products():
+    print("* Show users/products")
+    query = User.select().join(Product, on=(User.id == Product.seller))
+    result = query.execute()
+    for user in result:
+        products = []
+        for product in user.products:
+            products.append(product.name)
+        print(f"{user.id}; {user.name}; {products}")
+
+
+def show_products():
+    print("* Show products")
+    query = Product.select()
+    result = query.execute()
+    for product in result:
+        print(f"{product.id}; {product.name}; {product.description}; {product.quantity}; {product.price_in_cents}")
+
+
+def show_products_tags():
+    print("* Show products/tags")
+    query = Product.select().join(ProductTag, on=(Product.id == ProductTag.product))\
+        .join(Tag, on=Tag.id == ProductTag.tag)
+    result = query.execute()
+    for product in result:
+        tags = []
+        for tag in product.tags:
+            tags.append(tag.tag.name)
+        print(f"{product.id}; {product.name}; {product.quantity}; {tags}")
+
+
+def show_transactions():
+    print("* Show transactions")
+    query = Transaction.select().join(User, on=(Transaction.buyer == User.id))\
+        .join(Product, on=(Transaction.product == Product.id))
+    result = query.execute()
+    for transaction in result:
+        print(f"{transaction.id}; {transaction.buyer.name}; {transaction.product.name}; {transaction.total_price_cents}")
+
+
+if __name__ == "__main__":
+    # search("sweater")
+    list_user_products(1)
+    # list_products_per_tag(1)
+    # list_products_per_tag(2)
+    # add_product_to_catalog(1, "chees", "from the farm", 450, 10)
+    # search("chees")
+    # remove_product(8)
+    # search("chees")
+    # update_stock(1, 8000)
+    # show_users()
+    # show_products()
+    # show_users_products()
+    # show_products_tags()
+    # show_transactions()
+    # purchase_product(6, 3, 2)
+    show_products()
+    # show_transactions()
     pass
-   
-    
-    
-    
-  
