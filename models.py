@@ -1,4 +1,4 @@
-from peewee import *
+from peewee import SqliteDatabase,Model,TextField,DateField,IntegerField,ForeignKeyField,CharField,FloatField,DateTimeField
 
 db = SqliteDatabase('betsy.db')
 
