@@ -1,9 +1,7 @@
 __winc_id__ = "d7b474e9b3a54d23bca54879a4f1855b"
 __human_name__ = "Betsy Webshop"
-
+from rich import print
 from models import Product, ProductTag, Tag, Transaction, User
-
-
 
 # Search for products based on a term. Searching for 'sweater' should yield all products that have the word
 # 'sweater' in the name. This search should be case-insensitive.
@@ -15,7 +13,6 @@ def search(term):
 
 # View the products of a given user.
 def list_user_products(user_id):
-    
     print("* list_user_products:", user_id)
     query = Product.select().where(Product.seller == user_id)
     result = list(query.execute())
@@ -34,7 +31,7 @@ def list_products_per_tag(tag_id):
 def add_product_to_catalog(user_id, name, description, price_in_cents, quantity):
     print("* add_product_to_catalog:", user_id, name, description, price_in_cents, quantity)
     result = Product.create(seller=user_id, name=name, description=description, price_in_cents=price_in_cents,
-                            quantity=quantity)
+    quantity=quantity)
     print("result:", result)
 
 # Update the stock quantity of a product.
